@@ -4,6 +4,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 import com.utn2019.avanzada2.tp9.domain.Product;
 import com.utn2019.avanzada2.tp9.service.ProductsService;
+import io.swagger.annotations.ApiImplicitParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,7 @@ public class ProductsController {
     private final ProductsService productsService;
 
     @GetMapping
-    /*@ApiImplicitParam(name = "Authorization", required = true, paramType = "header")*/
+    @ApiImplicitParam(name = "Authorization", required = true, paramType = "header")
     public List<Product> getAll(
             @RequestParam(name = "page", required = false) Integer page,
             @RequestParam(name = "size", required = false) Integer size,
