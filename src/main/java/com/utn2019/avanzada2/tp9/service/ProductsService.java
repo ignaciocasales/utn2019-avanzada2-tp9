@@ -35,12 +35,28 @@ public class ProductsService {
         productsRepository.saveAll(products);
     }
 
-    public List<Product> getAll() {
-        return iterableToList(productsRepository.findAll());
+    public List<Product> getAll(Integer page, Integer size, String direction, String orderBy) {
+        return ofNullable(page)
+                .map(p -> getPaginated(p, size, direction, orderBy))
+                .orElseGet(this::getAll);
     }
 
-    public List<Product> getPaginated(Integer page, Integer size, String direction, String orderBy) {
-        return iterableToList(productsRepository.findAll(PageRequest.of(page, size, fromOptionalString(direction).orElse(ASC), ofNullable(orderBy).orElse("productId"))));
+    public Long total() {
+        return productsRepository.count();
+    }
+
+    private List<Product> getPaginated(Integer page, Integer size, String direction, String orderBy) {
+        final PageRequest request = PageRequest.of(
+                page,
+                ofNullable(size).orElse(10),
+                fromOptionalString(direction).orElse(ASC),
+                ofNullable(orderBy).orElse("productId")
+        );
+        return iterableToList(productsRepository.findAll(request));
+    }
+
+    private List<Product> getAll() {
+        return iterableToList(productsRepository.findAll());
     }
 
     private static List<Product> iterableToList(Iterable<Product> products) {
